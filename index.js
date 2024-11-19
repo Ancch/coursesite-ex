@@ -1,10 +1,10 @@
 const express = require('express');
 const mongoose = require("mongoose");
 require('dotenv').config();
-console.log(process.env.MONGO_URI)
 
 const app = express();
 
+const PORT = process.env.PORT;
 const MONGO_URI = process.env.MONGO_URI;
 
 const { userRouter } = require('./routes/user');
@@ -21,7 +21,9 @@ async function main() {
     try {
         await mongoose.connect(MONGO_URI);
         console.log("Database connected");
-        app.listen(3000);
+        app.listen(PORT, () => {
+            console.log("server running on ${PORT}");
+        });
     } catch (error) {
         console.error('Database connection error', error.message);
         process.exit(1);
