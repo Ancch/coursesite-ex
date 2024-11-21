@@ -5,51 +5,53 @@ const zod  = require("zod");
 
 const userRouter = Router();
 
+
+
 userRouter.post('/signup', async function(req, res) { 
     // zod validation
     const requireBody = zod.object({
         email: zod.string().min(3).max(100).email(),
         password: zod.string().min(5).max(100).regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/), 
-        firstName: zod.string().min(3).mmax(100),
-        lastName: zod.string().min(3).mmax(100),
+        firstName: zod.string().min(3).max(100),
+        lastName: zod.string().min(3).max(100),
     });
 
     const parsedData = requireBody.safeParse(req.body);
 
-    if(!parsedData) {
+    if(!parsedData.success) {
         return res.json({
             message: "Incorrect format",
-            error: parsedData.error,
+            error: parsedData.error.errors,
         });
     }
     
-    const { email, password, firstName, lastName } = req.body;
+    const { email, password, firstName, lastName } = parsedData.data;
 
     // Hash password
     try {
         const userDB = await userModel.findOne({
-            $or: [{email}, {firstName}, { lastName }]
+            $or: [{ email: email }, { firstName: firstName }, { lastName: lastName }]
         });
 
-        if(userDB){
-            const hashedpassword = hashPassword(password);
+        if(!userDB){
+            const hashedpassword = await hashPassword(password);
             await userModel.create({
-                email,
+                email: email,
                 password: hashedpassword,
-                firstName,
-                lastName
+                firstName: firstName,
+                lastName: lastName
             })
             res.json({
                 message: "You are signed up"
             })
         } else {
-            res.status(400).res.json({
+            res.status(400).json({
             message: "User already exists!"
             })
         }
     }
     catch(error) {
-        console.error("An error occurred:", error.message);
+        console.error("An error occurred:", error);
         res.status(500).json({
             message: "Internal server error"
         });
