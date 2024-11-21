@@ -2,6 +2,8 @@ const { Router } = require("express");
 const { userModel } =require("../db");
 const { hashPassword, comparePassword } = require("../helper");
 const zod  = require("zod");
+const jwt  = require('jsonwebtoken');
+const { JWT_USER_SECRET } = require("../config");
 
 const userRouter = Router();
 
@@ -64,22 +66,28 @@ userRouter.post("/signin", async function(req, res) {
 
     const user = await userModel.findOne({ email });
 
-    if(!user) {
-        return res.json({
-            message: "Incorrect credentials"
-        });
-    }
-
-    const isValid = comparePassword(password, user.passoword);
+    const isValid = comparePassword(password, user.password);
+    console.log('authenticated');
     if(!isValid) {
-        return res.json({
+         return res.status(401).json({
             message: "Incorrect password"
         });
     }
 
+
+    const token = jwt.sign({
+        id: user._id
+    }, JWT_USER_SECRET);
+
+    // Need to change to cookie logic
+
     res.json({
-        message: "signup endpoint"
-    })
+        token: token
+    });
+   
+        
+    
+
 })
 
 userRouter.post("/purchases", function(req, res) {
