@@ -1,11 +1,12 @@
 const { Router, application } = require("express");
 const adminRouter = Router();
-const { adminModel } = require("../db");
+const { adminModel, courseModel } = require("../db");
 
 const { hashPassword, comparePassword } = require("../helper");
 const zod  = require("zod");
 const jwt  = require('jsonwebtoken');
 const { JWT_ADMIN_SECRET } = require("../config");
+const { adminmiddleware } = require("../middlewares/admin");
 
 adminRouter.post("/signup", async function(req, res) {
     const requireBody = zod.object({
@@ -81,9 +82,20 @@ adminRouter.post("/login", async function(req, res) {
     });
 })
 
-adminRouter.post("/course", function(req, res) {
+adminRouter.post("/course", adminmiddleware, async function(req, res) {
+    const adminid = req.userId;
+
+    const { title, description, imageUrl, price } = req.body;
+
+    const course = await courseModel.create({
+        // creating a web3 saas in 6 hours, to get actual img file by the user
+        title, description, imageUrl, price, creatorId: adminId
+    })
+
+
     res.json({
-        message: "admin create course endpoint"
+        message: "Course created",
+        courseId: course._id
     })
 })
 
