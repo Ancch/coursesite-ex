@@ -83,13 +83,16 @@ adminRouter.post("/login", async function(req, res) {
 })
 
 adminRouter.post("/course", adminmiddleware, async function(req, res) {
-    const adminid = req.userId;
+    const adminid = req.userId; // just to be clear this userid is not userid rather the id name i specified in the middleware for this ep
 
     const { title, description, imageUrl, price } = req.body;
-
+// creating a web3 saas in 6 hours, to get actual img file by the user
     const course = await courseModel.create({
-        // creating a web3 saas in 6 hours, to get actual img file by the user
-        title, description, imageUrl, price, creatorId: adminId
+        title,
+        description, 
+        imageUrl, 
+        price, 
+        creatorId: adminId
     })
 
 
@@ -99,15 +102,33 @@ adminRouter.post("/course", adminmiddleware, async function(req, res) {
     })
 })
 
-adminRouter.put("/course", function(req, res) {
+adminRouter.put("/course", adminmiddleware, async function(req, res) {
+    const adminId = req.userId;
+    const { title, description, imageUrl, price, courseId } = req.body;
+
+    const course = await courseModel.updateOne({
+        _id: courseId,
+        creatorId: adminId
+    }, {
+        title: title, 
+        imageUrl: imageUrl, 
+        price: price, 
+    })
     res.json({
-        message: "admin change course content endpoint"
+        message: "course updated",
+        courseId: course._id
     })
 })
 
-adminRouter.get("/course/bulk", function(req, res) {
+adminRouter.get("/course/bulk",adminmiddleware, async function(req, res) {
+    const adminId = req.userId;
+    const courses = await courseModel.find({
+        
+        creatorId: adminId
+    })
     res.json({
-        message: "admin get courses endpoint"
+        message: "course updated",
+        courseId: course._id
     })
 })
 
