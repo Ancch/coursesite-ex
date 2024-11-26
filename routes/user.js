@@ -108,7 +108,8 @@ userRouter.get("/purchases", usermiddleware, async function(req, res) {
         _id: { $in: purchasedCourseIds }
     })
     res.json({
-        purchases
+        purchases,
+        courseData
     })
 })
 
