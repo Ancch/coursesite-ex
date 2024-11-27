@@ -9,7 +9,9 @@ const { usermiddleware } = require("../middlewares/user");
 
 const userRouter = Router();
 
-
+userRouter.get('/signup', (req, res) => {
+    res.send("Please use the signup form on the frontend to create an account.");
+});
 
 userRouter.post('/signup', async function(req, res) { 
     // zod validation

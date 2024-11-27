@@ -11,6 +11,10 @@ const { userRouter } = require('./routes/user');
 const { courseRouter } = require('./routes/course');
 const { adminRouter } = require('./routes/admin');
 
+
+app.get("/", function(req, res) {
+    res.sendFile(__dirname + "/public/index.html");
+})
 app.use(express.json());
 
 app.use('/v1/user', userRouter);
