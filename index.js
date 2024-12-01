@@ -11,10 +11,18 @@ const { userRouter } = require('./routes/user');
 const { courseRouter } = require('./routes/course');
 const { adminRouter } = require('./routes/admin');
 
+const cors = require("cors");
+
+
+app.use(express.static('/public/index1.html'));
+app.use(cors());
 
 app.get("/", function(req, res) {
-    res.sendFile(__dirname + "/public/index.html");
+    res.sendFile(__dirname + "/public/index1.html");
 })
+
+
+
 app.use(express.json());
 
 app.use('/v1/user', userRouter);
@@ -36,4 +44,5 @@ async function main() {
     }
     
 }
+
 main()

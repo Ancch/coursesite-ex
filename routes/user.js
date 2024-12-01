@@ -6,12 +6,8 @@ const jwt  = require('jsonwebtoken');
 const { JWT_USER_SECRET } = require("../config");
 const { usermiddleware } = require("../middlewares/user");
 
-
 const userRouter = Router();
 
-userRouter.get('/signup', (req, res) => {
-    res.send("Please use the signup form on the frontend to create an account.");
-});
 
 userRouter.post('/signup', async function(req, res) { 
     // zod validation
@@ -65,11 +61,11 @@ userRouter.post('/signup', async function(req, res) {
         
 })
 
-userRouter.post("/signin", async function(resq, res) {
+userRouter.post("/signin", async function(req, res) {
     const { email, password } = req.body;
 
     const user = await userModel.findOne({ email });
-
+    console.log("mhmm");
     const isValid = comparePassword(password, user.password);
     console.log('authenticated');
     if(!isValid) {
