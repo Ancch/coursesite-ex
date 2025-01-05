@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>CoursesFoU</title>
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js"></script>
+<script>
+    async function adminlogin() {
+        const email = document.getElementById("login-email").value;
+        const password = document.getElementById("login-password").value;
+
+        try {
+            const response = await axios.post("http://localhost:3001/v1/admin/login", {
+                email: email,
+                password: password
+            });
+            alert("You are signed in!"); // Success message
+        } catch (error) {
+            console.error(error);
+            alert("Signup failed! Check your input or server.");
+        }
+    }
+</script>
+<body>
+    <div>
+        <h1>Admin login</h1>
+        <input id="login-email" type="text" name="email" placeholder="Email">
+        <input id="login-password" type="password" name="password" placeholder="Password">
+        <button onclick="adminlogin()">Submit</button>
+    </div>
+</body>
+</html>

@@ -5,14 +5,14 @@
 </head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js"></script>
 <script>
-    async function usersignup() {
+    async function adminsignup() {
         const email = document.getElementById("signup-email").value;
         const password = document.getElementById("signup-password").value;
         const firstName = document.getElementById("firstname").value;
         const lastName = document.getElementById("lastname").value;
 
         try {
-            const response = await axios.post("http://localhost:3001/v1/user/signup", {
+            const response = await axios.post("http://localhost:3001/v1/admin/signup", {
                 email: email,
                 password: password,
                 firstName: firstName,
@@ -25,34 +25,15 @@
         }
     }
 
-    async function usersignin() {
-        const email = document.getElementById("signin-email").value;
-        const password = document.getElementById("signin-password").value;
-
-        try {
-            const response = await axios.post("http://localhost:3001/v1/user/signin", {
-                email: email,
-                password: password
-            });
-            alert("You are signed in!"); // Success message
-        } catch (error) {
-            console.error(error);
-            alert("Signup failed! Check your input or server.");
-        }
-    }
 </script>
 <body>
     <div>
-        <h1>User Signup</h1>
+        <h1>Admin Signup</h1>
         <input id="signup-email" type="text" name="email" placeholder="Email">
         <input id="signup-password" type="password" name="password" placeholder="Password">
         <input id="firstname" type="text" name="firstname" placeholder="First Name">
         <input id="lastname" type="text" name="lastname" placeholder="Last Name">
-        <button onclick="usersignup()">Submit</button>
-        <h1>User signin</h1>
-        <input id="signin-email" type="text" name="email" placeholder="Email">
-        <input id="signin-password" type="password" name="password" placeholder="Password">
-        <button onclick="usersignin()">Submit</button>
+        <button onclick="adminsignup()">Submit</button>
     </div>
 </body>
 </html>
