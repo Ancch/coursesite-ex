@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require("mongoose");
 require('dotenv').config();
+const cookieParser = require("cookie-parser");
 
 const path = require("path");
 const app = express();
@@ -55,7 +56,21 @@ app.get("/v1/admin/login", (req, res) => {
     res.render("adminlogin");
 })
 
+app.get("/v1/admin/course", (req, res) => {
+    res.render("admincourse");
+})
+
+app.get("/v1/course/preview", (req, res) => {
+    res.render("preview");
+})
+
 app.use(express.json());
+app.use(cookieParser()); 
+
+app.use(cors({
+    origin: "http://localhost:3001",
+    credentials: true
+}))
 
 app.use('/v1/user', userRouter);
 app.use('/v1/admin', adminRouter);

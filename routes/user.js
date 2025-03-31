@@ -13,18 +13,47 @@ userRouter.post('/signup', async function(req, res) {
     // zod validation
     const requireBody = zod.object({
         email: zod.string().min(3).max(100).email(),
-        password: zod.string().min(5).max(100).regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/), 
-        firstName: zod.string().min(3).max(100),
-        lastName: zod.string().min(3).max(100),
+        password: zod.string().min(5).max(100)
+            .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/, {
+                message: "Password must be at least 5 characters long and include a mix of lowercase, uppercase, numbers, and special characters.",
+            }), 
+        firstName: zod.string().min(3, "First name should be at least 3 characters long").max(100),
+        lastName: zod.string().min(3, "Last name should be at least 3 characters long").max(100),
     });
 
     const parsedData = requireBody.safeParse(req.body);
 
     if(!parsedData.success) {
-        return res.json({
-            message: "Incorrect format",
+
+        const fieldErrors = parsedData.error.formErrors.fieldErrors;
+        if (fieldErrors.email) {
+            return res.status(201).json({
+                message: "Incorrect email format",
+                error: parsedData.error.errors,
+            });
+        }
+        if (fieldErrors.password) {
+            return res.status(400).json({
+                message: fieldErrors.password[0],
+                error: fieldErrors.password,
+            });
+        }
+        if (fieldErrors.firstname) {
+            return res.status(400).json({
+                message: fieldErrors.firstName[0],
+                error: fieldErrors.firstName,
+            });
+        }
+        if (fieldErrors.lastName) {
+            return res.status(400).json({
+                message: fieldErrors.lastName[0],
+                error: fieldErrors.lastName,
+            });
+        }
+        return res.status(400).json({
+            message: "Invalid input data",
             error: parsedData.error.errors,
-        });
+        }); 
     }
     
     const { email, password, firstName, lastName } = parsedData.data;

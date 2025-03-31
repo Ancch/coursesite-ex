@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>CoursesFoU</title>
 </head>
@@ -15,12 +16,14 @@
                 password: password
             });
             alert("You are signed in!"); // Success message
+            window.location.href = "/v1/admin/course";
         } catch (error) {
             console.error(error);
             alert("Signup failed! Check your input or server.");
         }
     }
 </script>
+
 <body>
     <div>
         <h1>Admin login</h1>
@@ -29,4 +32,5 @@
         <button onclick="adminlogin()">Submit</button>
     </div>
 </body>
+
 </html>

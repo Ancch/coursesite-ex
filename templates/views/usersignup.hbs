@@ -18,10 +18,31 @@
                 firstName: firstName,
                 lastName: lastName
             });
-            alert("You are signed up!"); // Success message
+
+            if (response.data.message === "You are signed up") {
+                alert("You are signed up!"); // Success message
+            } else {
+                alert("Unexpected response: " + JSON.stringify(response.data));
+            }
+            
         } catch (error) {
-            console.error(error);
-            alert("Signup failed! Check your input or server.");
+            if (error.response && error.response.data) {
+                if (error.response.data.message) {
+                    alert(error.response.data.message);
+                }
+                else if (error.response.data.error) {
+                    const validateErrors = error.response.data.error
+                        .map((err) => err.message)
+                        .join("\n")
+                    alert("Validation errors:\n" + validateErrors);
+                } else {
+                    alert("An unknown error occured!");
+                }
+
+            } else {
+                alert("Signup failed! Please try again.");
+            }
+                
         }
     }
 

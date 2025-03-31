@@ -14,10 +14,18 @@
                 email: email,
                 password: password
             });
-            alert("You are signed in!"); // Success message
+            if (response.status === 200) {
+                alert("You are signed in!"); // Success message
+            }
+            
         } catch (error) {
-            console.error(error);
-            alert("Signup failed! Check your input or server.");
+            if (error.response && error.response && error.response.data.error) {
+                alert(error.response.data.error);
+            } else {
+                console.error(error);
+                alert("Signup failed! Check your input or server.");
+            }
+            
         }
     }
 </script>

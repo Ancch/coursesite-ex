@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>CoursesFoU</title>
+</head>
+
+<style>
+    #tittle {
+        background-color: transparent;
+        border: 1px solid #ccc;
+        padding: 2px;
+    }
+
+    #description {
+        background-color: transparent;
+        border: 1px solid #ccc;
+        outline: none;
+    }
+
+    #imageURL {
+        background-color: transparent;
+        border: 1px solid #ccc;
+        padding: 2px;
+    }
+
+    #price {
+        background-color: transparent;
+        border: 1px solid #ccc;
+        outline: 5px;
+    }
+</style>
+
+<body>
+    <div style="width:800px; margin:0 auto; margin-bottom: 50px; text-align: center">
+        <h1>Create Course</h1>
+        <input id="tittle" type="text" name="tittle" placeholder="tittle for your course"
+            style="margin-bottom: 10px;"><br>
+        <input id="description" type="text" name="description" placeholder="Descrption"
+            style="margin-bottom: 10px;"><br>
+        <input id="imageURL" type="link" name="imageURL" placeholder="Insert image" style="margin-bottom: 10px;"><br>
+        <input id="price" type="text" name="price" placeholder="course price"><br>
+        <button type="button" onclick="admincourse()">Submit</button>
+
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js"></script>
+    <script>
+        async function admincourse() {
+            const tittle = document.getElementById("tittle").value;
+            const description = document.getElementById("description").value;
+            const imageURL = document.getElementById("imageURL").value;
+            const price = document.getElementById("price").value;
+
+            console.log("Submitting:", { tittle, description, imageURL, price });
+            try {
+                const response = await axios.post("http://localhost:3001/v1/admin/course", {
+                    tittle,
+                    description,
+                    imageURL,
+                    price
+                }, {
+                    withCredentials: true
+                });
+                console.log("Response", response.data);
+                alert("Course created" + response.data.courseId);
+
+                window.location.href = "/v1/course/preview";
+
+            } catch (error) {
+                console.error("request error", error.response);
+                if (error.response) {
+                    alert("course creation faileed" + error.response.data.message);
+                } else {
+                    alert("check network");
+                }
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>
